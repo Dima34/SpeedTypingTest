@@ -18,14 +18,47 @@ let wrongChars = 0;
 let correctChars = 0;
 let wordsCount = 0;
 
+let intervalId;
+let isStarted = false;
+let secondsFromStart = 0;
+let secondsToEnd;
+
 function Init() {
     needToType = textList[0];
     VisualizeText();
     StartTypingSequence();
 }
 
+function Destroy() {
+    secondsFromStart == 0
+    clearInterval(intervalId);
+}
+
+function TickTime() {
+    console.log("tick");
+    secondsToEnd--;
+    secondsFromStart++;
+    VisualizeCounters();
+
+    if(secondsRemain == 0){
+        console.log("ho time");
+        isStarted = false;
+        Destroy();
+    }
+}
+
+function CheckForStart() {
+    if(isStarted == false){
+        isStarted = true;
+        secondsToEnd = secondsRemain;
+        intervalId = setInterval(TickTime, 1000);
+    }
+}
+
 function StartTypingSequence() {
     inputZone.addEventListener("input", (e)=>{
+        CheckForStart();
+
         e.target.value = "";
         let inputCharCode = e.data;
 
@@ -41,7 +74,6 @@ function StartTypingSequence() {
 
 function CorrectWordSequence() {
     if(IsWordEnded()){
-        console.log("is ended");
         wordsCount ++;
     }
     
@@ -66,15 +98,58 @@ function GetNextCharCode(){
 }
 
 function VisualizeCounters() {
-    secondsRemainCounter.innerText = secondsRemain;
-    wordsMinCounter.innerText = wordsCount;
-    charsMinCounter.innerText = correctChars;
-    accuracyCounter.innerText = correctChars / wrongChars * 100;
+    secondsRemainCounter.innerText = secondsToEnd;
+
+    let wpm = GetUnitPerMin(wordsCount, secondsFromStart);
+    let cpm = GetUnitPerMin(correctChars, secondsFromStart);
+    let accuracy = Math.round(100 -(wrongChars * 100 / correctChars))
+
+    wordsMinCounter.innerText = GetCorrectNum(wpm);
+    charsMinCounter.innerText = GetCorrectNum(cpm);
+    accuracyCounter.innerText = GetCorrectNum(accuracy);
+}
+
+function GetUnitPerMin(unit, seconds) {
+    return Math.round(unit / (seconds / 60));
+}
+
+function GetCorrectNum(num){
+    console.log(num);
+
+    if( 
+        num != NaN && 
+        num != Infinity && 
+        num != -Infinity &&
+        num > 0
+    ){
+        return num;
+    } else{
+        return 0;
+    }
 }
 
 function VisualizeText() {
-    typedTextZone.innerText = typed;
-    needToTypeTextZone.innerText = needToType;
+    let isCurrentNotSpacebar = typed.slice(-1).charCodeAt(0) != 32 ? true : false
+
+    let splittedTypedList = typed.split(" ");
+    let splittedNeedToTypeList = needToType.split(" ");
+
+
+    let typedRenderLine;
+    let needToTypeRenderLine;
+
+    splittedTypedList.forEach((el, index) => {
+        if(isCurrentNotSpacebar && index == splittedTypedList.length-1){
+            typedRenderLine += String.fromCharCode(160) + `<span class = "isPrinting">${el}</span>`
+        } else{
+            typedRenderLine += String.fromCharCode(160) + `<span class = "printed">${el}</span>`
+        }
+    });
+
+    needToTypeRenderLine = splittedNeedToTypeList.join(String.fromCharCode(160));
+
+    typedTextZone.innerHTML = typedRenderLine;
+    needToTypeTextZone.innerText = needToTypeRenderLine;
 }
 
 
