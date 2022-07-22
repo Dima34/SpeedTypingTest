@@ -5,10 +5,13 @@ const textList = [
 const typedTextZone = document.getElementById("typedText");
 const needToTypeTextZone = document.getElementById("needToTypeText");
 const inputZone = document.getElementById("inputZone");
+const coursor = document.getElementById("typeCoursor");
 const secondsRemainCounter = document.getElementById("secondsRemainCounter");
 const wordsMinCounter = document.getElementById("wordsMinCounter");
 const charsMinCounter = document.getElementById("charsMinCounter");
 const accuracyCounter = document.getElementById("accuracyCounter");
+
+coursor.classList.add("deactivate");
 
 let typed = "";
 let needToType = "";
@@ -27,6 +30,7 @@ function Init() {
     needToType = textList[0];
     VisualizeText();
     StartTypingSequence();
+    CoursorCheckingSequence();
 }
 
 function Destroy() {
@@ -59,7 +63,6 @@ function StartTypingSequence() {
     inputZone.addEventListener("input", (e)=>{
         CheckForStart();
 
-        e.target.value = "";
         let inputCharCode = e.data;
 
         if(inputCharCode == GetNextCharCode()){
@@ -84,7 +87,6 @@ function CorrectWordSequence() {
 }
 
 function IsWordEnded() {
-    console.log("word ended");
     return needToType[0].charCodeAt(0) == 32 ? true : false;
 }
 
@@ -131,14 +133,16 @@ function GetCorrectNum(num){
 function VisualizeText() {
     let isCurrentNotSpacebar = typed.slice(-1).charCodeAt(0) != 32 ? true : false
 
+
     let splittedTypedList = typed.split(" ");
     let splittedNeedToTypeList = needToType.split(" ");
 
+    let typedRenderLine = "";
+    let needToTypeRenderLine = "";
 
-    let typedRenderLine;
-    let needToTypeRenderLine;
 
     splittedTypedList.forEach((el, index) => {
+
         if(isCurrentNotSpacebar && index == splittedTypedList.length-1){
             typedRenderLine += String.fromCharCode(160) + `<span class = "isPrinting">${el}</span>`
         } else{
@@ -146,10 +150,34 @@ function VisualizeText() {
         }
     });
 
+    console.log("list -" + typedRenderLine);
+
     needToTypeRenderLine = splittedNeedToTypeList.join(String.fromCharCode(160));
 
     typedTextZone.innerHTML = typedRenderLine;
     needToTypeTextZone.innerText = needToTypeRenderLine;
+}
+
+function CoursorCheckingSequence() {
+    let timeoutId;
+
+    inputZone.addEventListener("blur", ()=>{
+        coursor.className = "deactivate";
+    })
+
+    inputZone.addEventListener("focus", ()=>{
+        coursor.className = "blink";
+    })
+
+    inputZone.addEventListener("input", ()=> {
+        coursor.className = "";
+
+        if(timeoutId != null){
+            clearTimeout(timeoutId)
+        }
+
+        timeoutId = setTimeout(()=>{coursor.className = "blink";}, 10);
+    })
 }
 
 
