@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Speed Typing</title>
+</head>
+<body>
+    <div class="counters">
+        <div class="secondsCounter counter">
+            <span id="secondsRemainCounter">60</span>
+            <span>seconds</span>
+        </div>
+
+        <div class="counter">
+            <span id="wordsMinCounter">0</span>
+            <span>words/min</span>
+        </div>
+
+        <div class="counter">
+            <span id="charsMinCounter">0</span>
+            <span>chars/min</span>
+        </div>
+
+        <div class="counter">
+            <span id="accuracyCounter">0</span>
+            <span>% accuracy</span>
+        </div>
+    </div>
+    
+    <div class="textHolder">
+        <p id = "typedText" style="color: red;"></p>
+        <p id = "needToTypeText"></p>
+    </div>
+
+    <textarea id="inputZone" name="" id="" cols="30" rows="10"></textarea>
+
+    <script src="./index.js"></script>
+</body>
+</html>

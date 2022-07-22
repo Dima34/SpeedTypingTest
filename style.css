@@ -1,0 +1,43 @@
+.textHolder{
+    width: 600px;
+    font-family: Merriweather,serif;
+    font-weight: 100;
+    font-size: 2rem;
+    position: relative;
+    line-height: 2;
+    display: flex;
+    border: 0 solid #d4d4d7;
+    box-shadow: 0 9px 24px rgb(0 0 0 / 12%);
+    overflow: hidden;
+    height: 120px;
+}
+
+#typedText, #needToTypeText{
+    white-space: nowrap;
+    position: absolute;
+    white-space: pre-visible;
+    font-variant-alternates: visible-controls; /* high level, assumes support by the font (format) */
+    font-feature-settings: "vwsp" 1;
+    text-transform: visible-whitespace;
+}
+
+#typedText{
+    text-align: right;
+    right: 50%;
+}
+
+#needToTypeText{
+    text-align: left;
+    left: 50%;
+}
+
+.counters{
+    display: flex;
+    gap: 20px;
+}
+
+.counter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
