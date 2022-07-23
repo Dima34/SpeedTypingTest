@@ -82,6 +82,57 @@
     display: none;
 }
 
+#endPopup{
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#endPopup.active{
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
+#startTypingIndicator{
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    background-color: #ffd000;
+    padding: 10px;
+    animation: pulse 1.2s infinite ease-out;
+    display: none;
+}
+
+#startTypingIndicator.active{
+    display: block;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translateY(0) translateX(-50%);
+    }
+    50% {
+        transform: translateY(-1rem) translateX(-50%);
+    }
+    100% {
+        transform: translateY(0) translateX(-50%);
+    }
+}
+
 @keyframes blink-animation {
     to {
       visibility: hidden;
