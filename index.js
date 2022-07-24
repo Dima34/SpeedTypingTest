@@ -113,7 +113,7 @@ function StartTypingSequence() {
     inputZone.addEventListener("input", (e)=>{
         CheckForStart();
 
-        let inputCharCode = e.data;
+        let inputCharCode = e.data.charCodeAt[0];
 
         if(inputCharCode == GetNextCharCode()){
             CorrectWordSequence();
@@ -146,7 +146,7 @@ function MoveLine() {
 }
 
 function GetNextCharCode(){
-    return needToType[0];
+    return needToType[0].charCodeAt[0];
 }
 
 function VisualizeCounters() {
