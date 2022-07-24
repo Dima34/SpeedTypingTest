@@ -32,6 +32,7 @@ const accuracyCounter = document.getElementById("accuracyCounter");
 const endPopup = document.getElementById("endPopup");
 const restartButton = document.getElementById("newGame");
 const typingIndicator = document.getElementById("startTypingIndicator");
+const capsLockIndicator = document.getElementById("capsLockAlert");
 
 coursor.classList.add("deactivate");
 
@@ -61,7 +62,8 @@ function Init() {
     StartTypingSequence();
     CoursorCheckingSequence();
     HandleEndPopupControlls();
-    ShowStartTypingIndicator();
+    ShowTypingIndicator();
+    CheckForCapsLock();
 }
 
 function Destroy() {
@@ -107,7 +109,7 @@ function CheckForEnd() {
 
 function CheckForStart() {
     if(isStarted == false){
-        HideStartTypingIndicator();
+        HideTypingIndicator();
         isStarted = true;
         secondsToEnd = secondsRemain;
         intervalId = setInterval(TickTime, 1000);
@@ -250,12 +252,34 @@ function ClosePopup() {
     endPopup.className = "";
 }
 
-function ShowStartTypingIndicator(){
+function ShowTypingIndicator(){
     typingIndicator.classList.add("active");
 }
 
-function HideStartTypingIndicator(){
+function HideTypingIndicator(){
     typingIndicator.classList.remove("active");
+}
+
+function ShowCapsLockIndicator(){
+    capsLockIndicator.classList.add("active");
+}
+
+function HideCapsLockIndicator(){
+    capsLockIndicator.classList.remove("active");
+}
+
+function CheckForCapsLock() {
+    document.addEventListener('keyup', (e) => {
+        if (IsCapslockOn(e)) {
+            ShowCapsLockIndicator();
+        } else {
+            HideCapsLockIndicator();
+        }
+    });
+}
+
+function IsCapslockOn(e) {
+    return e.getModifierState('CapsLock')
 }
 
 Init();
