@@ -14,13 +14,6 @@ const textList = [
     "One of them was a young fellow of about twentyseven, not tall, with black curling hair, and small, grey, fiery eyes. His nose was broad and flat, and he had high cheek bones; his thin lips were constantly compressed into an impudent, ironical—it might almost be called a malicious—smile; but his forehead was high and well formed, and atoned for a good deal of the ugliness of the lower part of his face. A special feature of this physiognomy was its death-like pallor, which gave to the whole man an indescribably emaciated appearance in spite of his hard look, and at the same time a sort of passionate and suffering expression which did not harmonize with his impudent, sarcastic smile and keen, self-satisfied bearing. He wore a large fur—or rather astrachan—overcoat, which had kept him warm all night, while his neighbour had been obliged to bear the full severity of a Russian November night entirely unprepared. His wide sleeveless mantle with a large cape to it—the sort of cloak one sees upon travellers during the winter months in Switzerland or North Italy—was by no means adapted to the long cold journey through Russia, from Eydkuhnen to St. Petersburg.", 
 ];
 
-
-const endingsList = [
-    {
-    
-    }
-]
-
 const typedTextZone = document.getElementById("typedText");
 const needToTypeTextZone = document.getElementById("needToTypeText");
 const inputZone = document.getElementById("inputZone");
@@ -90,7 +83,6 @@ function SetRendomText() {
 }
 
 function TickTime() {
-    console.log("tick");
     secondsToEnd--;
     secondsFromStart++;
 
@@ -102,6 +94,7 @@ function CheckForEnd() {
     if(secondsToEnd == 0){
         isStarted = false;
         inputZone.blur();
+        FillEndPopup();
         OpenPopup();
         Destroy();
     }
@@ -159,13 +152,13 @@ function GetNextCharCode(){
 function VisualizeCounters() {
     secondsRemainCounter.innerText = secondsToEnd;
 
-    wpm = GetUnitPerMin(wordsCount, secondsFromStart);
-    cpm = GetUnitPerMin(correctChars, secondsFromStart);
-    accuracy = Math.round(100 -(wrongChars * 100 / correctChars))
+    wpm = GetCorrectNum(GetUnitPerMin(wordsCount, secondsFromStart));
+    cpm = GetCorrectNum(GetUnitPerMin(correctChars, secondsFromStart));
+    accuracy = GetCorrectNum(Math.round(100 -(wrongChars * 100 / correctChars)))
 
-    wordsMinCounter.innerText = GetCorrectNum(wpm);
-    charsMinCounter.innerText = GetCorrectNum(cpm);
-    accuracyCounter.innerText = GetCorrectNum(accuracy);
+    wordsMinCounter.innerText = wpm;
+    charsMinCounter.innerText = cpm;
+    accuracyCounter.innerText = accuracy;
 }
 
 function GetUnitPerMin(unit, seconds) {
@@ -173,8 +166,6 @@ function GetUnitPerMin(unit, seconds) {
 }
 
 function GetCorrectNum(num){
-    console.log(num);
-
     if( 
         num != NaN && 
         num != Infinity && 
@@ -197,7 +188,6 @@ function VisualizeText() {
     let typedRenderLine = "";
     let needToTypeRenderLine = "";
 
-
     splittedTypedList.forEach((el, index) => {
 
         if(isCurrentNotSpacebar && index == splittedTypedList.length-1){
@@ -206,8 +196,6 @@ function VisualizeText() {
             typedRenderLine += String.fromCharCode(160) + `<span class = "printed">${el}</span>`
         }
     });
-
-    console.log("list -" + typedRenderLine);
 
     needToTypeRenderLine = splittedNeedToTypeList.join(String.fromCharCode(160));
 
@@ -242,6 +230,33 @@ function HandleEndPopupControlls(){
         ClosePopup();
         Init();
     })
+}
+
+function FillEndPopup(){
+    let title, text;
+
+    let popupTitleEl = endPopup.querySelector(".endPopup__title");
+    let popupTextEl = endPopup.querySelector(".endPoput__text");
+
+    if(wpm <= 10)
+    {
+        title = `You-re a Turtle`;
+        text = `You are a turtle with ${wpm}WPM (${cpm}CPM). Your accuracy was ${accuracy}%. Keep practicing`;
+    } else if(wpm <= 20)
+    {
+        title = `You-re a T-rex`;
+        text = `Nice! You are a T-rex with ${wpm}WPM (${cpm}CPM). Your accuracy was ${accuracy}%. Keep practicing`;
+    }else if(wpm <= 30)
+    {
+        title = `You-re a Robot!`;
+        text = `Well done! You are a Robot with ${wpm}WPM (${cpm}CPM). Your accuracy was ${accuracy}%. Keep practicing`;
+    } else{
+        title = `You're done!`;
+        text = `Keep practicing`;
+    }
+
+    popupTitleEl.innerText = title;
+    popupTextEl.innerText = text;
 }
 
 function OpenPopup() {
